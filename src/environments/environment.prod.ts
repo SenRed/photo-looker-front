@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  title: 'Photo looker',
+  apiUrl: 'http://localhost:8080'
 };

@@ -28,8 +28,19 @@ img:hover {
   height: 100vh;
   width: 200px;
   border: 1px solid black;
+  display: flex;
 }
 
-.example-item {
-  height: 50px;
+.mat-success {
+  background-color: green;
+  color: #fff;
+}
+
+.main{
+  display: flex;
+  flex-direction: column;
+}
+
+.validated{
+  border:10px solid green;
 }

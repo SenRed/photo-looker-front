@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable, Subject} from "rxjs";
-import * as fs from 'fs';
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../environments/environment";
+import {ApiService} from "./service/api.service";
 
 export interface ImageInfos {
   name: string;
   status: string;
+  originalImageURL: string;
+  thumbedImageURL: string;
 }
 
 @Component({
@@ -15,34 +17,35 @@ export interface ImageInfos {
 })
 export class AppComponent implements OnInit {
 
-  title = 'photo-looker';
-  path = "D/Users/senred/Documents/photos/Z 50 7805382/DCIM/100NZ_50";
-  allImages: ImageInfos[] | undefined;
-  url = "http://localhost:8080";
-  // @ts-ignore
+  title = environment.title;
+  allImages: ImageInfos[];
   selectedImage: ImageInfos;
   isDataAvailable: boolean = false;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private apiService: ApiService) {
   }
 
   ngOnInit(): void {
-    this.httpClient.get<ImageInfos[]>(this.url + "/hello").subscribe((data) => {
+    this.apiService.fetchImagesMeta().subscribe((data) => {
       this.allImages = data;
       this.selectedImage = this.allImages[0];
-      console.log(this.selectedImage);
       this.isDataAvailable = true
     })
   }
-
-  getUrl(imageInfos: ImageInfos) {
-    return this.url + "/images/" + imageInfos.name;
+  showImage(imageInfos: ImageInfos) {
+    this.selectedImage = imageInfos;
   }
 
-  showImage(imageInfos: ImageInfos) {
-    console.log("opening image", imageInfos);
-    this.selectedImage = imageInfos,
-      this.getUrl(this.selectedImage);
+  validate() {
+    this.apiService.validate(this.selectedImage).subscribe(
+      () => {
+        let indexToUpdate = this.allImages.findIndex(element => this.selectedImage.name === element.name);
+        this.allImages[indexToUpdate].status = 'OK';
+        },
+      (error) => {
+        console.log('some error happend' + error);
+      })
+
   }
 }
 

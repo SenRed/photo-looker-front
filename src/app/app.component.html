@@ -4,17 +4,24 @@
 
 <div class="app">
 
-  <form enctype="multipart/form-data" class="app-body">
-    <div *ngIf="isDataAvailable">
-      <img src="{{getUrl(selectedImage)}}" alt="image">
+  <div class="app-body">
+    <div class="main">
+      <div align="center" style="padding-bottom: 15px">
+        <button mat-raised-button color="success" (click)="validate()">
+        <span class="material-icons">
+          done
+        </span>
+        </button>
+      </div>
+      <div *ngIf="isDataAvailable">
+        <img src="{{selectedImage.originalImageURL}}" alt="image">
+      </div>
     </div>
-
-    <a href="#">body</a>
-  </form>
-  <div class="app-scroll"><a href="#">scroller</a>
+  </div>
+  <div class="app-scroll"><a href="#">{{allImages.length}}</a>
     <cdk-virtual-scroll-viewport appendOnly itemSize="50" class="example-viewport">
-      <div *cdkVirtualFor="let item of allImages" class="example-item">
-        <img class="thumb" src="{{getUrl(item)}}" alt="image" (click)="showImage(item)">
+      <div *cdkVirtualFor="let item of allImages" >
+        <img [ngClass]="item.status === 'OK' ? 'validated thumb':'thumb'" src="{{item.thumbedImageURL}}" alt="image" (click)="showImage(item)">
       </div>
     </cdk-virtual-scroll-viewport>
   </div>
